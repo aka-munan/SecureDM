@@ -12,18 +12,24 @@ actual class PermissionsManager actual constructor(callback: PermissionCallback)
     PermissionHandler {
     @Composable
     override fun askPermission(permission: PermissionType) {
-        when(permission){
-            PermissionType.GALLERY -> TODO()
-            PermissionType.CAMERA -> TODO()
-            PermissionType.RECORD_AUDIO -> TODO()
+        when(permission){//no permission are required on desktop
+            PermissionType.GALLERY -> {
+
+            }
+            PermissionType.CAMERA -> {
+
+            }
+            PermissionType.RECORD_AUDIO -> {
+
+            }
         }
     }
 
     @Composable
     override fun isPermissionGranted(permission: PermissionType): Boolean {
        return when(permission){
-            PermissionType.GALLERY -> TODO()
-            PermissionType.CAMERA -> TODO()
+            PermissionType.GALLERY -> true
+            PermissionType.CAMERA -> true
             PermissionType.RECORD_AUDIO -> true
         }
     }
