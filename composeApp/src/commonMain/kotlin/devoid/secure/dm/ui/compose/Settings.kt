@@ -7,16 +7,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.*
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import devoid.secure.dm.domain.settings.SettingsConfig
 import devoid.secure.dm.ui.theme.ThemePreference
+import devoid.secure.dm.ui.theme.blurColor
 import devoid.secure.dm.ui.viewmodel.AuthViewModel
 import devoid.secure.dm.ui.viewmodel.LoginProvider
 import devoid.secure.dm.ui.viewmodel.SettingsViewModel
@@ -32,26 +35,27 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
     val originalConfig by settingsViewModel.loadSettings().collectAsState(SettingsConfig())
     var editedConfig by remember(originalConfig) { mutableStateOf(originalConfig) }
 
-    Scaffold(topBar = {
-        TopAppBar(title = {
-            Text("Settings")
-        }, actions = {
-            Button(
-                enabled = originalConfig != editedConfig, content = {
-                    Text("Save")
-                },
-                onClick = {
-                    settingsViewModel.saveSettings(editedConfig)
-                }
-            )
-        })
-    }) {
-        Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    Scaffold(
+        containerColor = Color.Transparent,
+        topBar = {
+            TopAppBar(title = {
+                Text("Settings")
+            },colors = TopAppBarDefaults.topAppBarColors().copy(
+                containerColor = MaterialTheme.colorScheme.blurColor
+            ), actions = {
+                Button(
+                    enabled = originalConfig != editedConfig, content = {
+                        Text("Save")
+                    },
+                    onClick = {
+                        settingsViewModel.saveSettings(editedConfig)
+                    }
+                )
+            })
+        }) {paddingValues ->
+        Box(modifier = modifier.then(Modifier.padding(paddingValues)), contentAlignment = Alignment.Center) {
             Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = { viewModel.signOut { } }) {
-                    Text("LogOut", color = MaterialTheme.colorScheme.tertiary)
-                }
-                Card() {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.blurColor)) {
                     Column(Modifier.padding(4.dp)) {
                         Text(
                             "Chats",
@@ -103,7 +107,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                Card {
+                Card (colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.blurColor)){
                     Column(Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
                         Text(
                             "Theme",
@@ -133,7 +137,7 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                         }
                     }
                 }
-                Card {
+                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.blurColor)) {
                     Column(Modifier.padding(vertical = 4.dp, horizontal = 8.dp)) {
                         Text(
                             "Profile",
@@ -143,9 +147,13 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
                         )
                         Spacer(Modifier.height(8.dp))
                         val user by viewModel.currentUser.collectAsState()
-                        ProfileDisplayer(viewModel.getLoginProvider(),user?.fullName?:"Unknown User",user?.avatarUrl, onLogout = {
-                            viewModel.signOut { }
-                        })
+                        ProfileDisplayer(
+                            viewModel.getLoginProvider(),
+                            user?.fullName ?: "Unknown User",
+                            user?.avatarUrl,
+                            onLogout = {
+                                viewModel.signOut { }
+                            })
                     }
                 }
             }
@@ -154,8 +162,8 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProfileDisplayer(loginProvider: LoginProvider, name: String, avtar: String?,onLogout:()-> Unit) {
-    Row (verticalAlignment = Alignment.CenterVertically){
+fun ProfileDisplayer(loginProvider: LoginProvider, name: String, avtar: String?, onLogout: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
             modifier = Modifier.clip(CircleShape).size(50.dp),
             model = avtar,
@@ -163,10 +171,15 @@ fun ProfileDisplayer(loginProvider: LoginProvider, name: String, avtar: String?,
         )
         Spacer(Modifier.width(8.dp))
         Column(Modifier.padding(8.dp).fillMaxWidth().weight(1f)) {
-            Card( colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)){
+            Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
 
-                Row (Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically ){
-                    Text(text = name, modifier = Modifier.padding(4.dp), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+                Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = name,
+                        modifier = Modifier.padding(4.dp),
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
                     Spacer(Modifier.height(8.dp))
                     VerticalDivider(Modifier.height(28.dp).padding(horizontal = 16.dp))
                     Spacer(Modifier.height(8.dp))

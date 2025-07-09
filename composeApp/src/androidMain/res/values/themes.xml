@@ -4,6 +4,6 @@
     <style name="Theme.Secure.Dm.Splash" parent="Theme.SplashScreen">
         <item name="postSplashScreenTheme">@style/Theme.Secure.Dm</item>
         <item name="windowSplashScreenBackground">@color/colorBackground</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/chat_bubble</item>
     </style>
 </resources>
