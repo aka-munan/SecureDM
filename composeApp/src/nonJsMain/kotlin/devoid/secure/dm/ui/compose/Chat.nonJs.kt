@@ -421,6 +421,7 @@ fun MessagesList(
                         selectedMessage?.attachment?.getOrNull(0)?.toAttachment()?.run {
                             onDownloadAttachment(this)
                         }
+                        selectedMessage = null
                     }
                 }
             }
